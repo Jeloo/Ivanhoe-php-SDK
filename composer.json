@@ -1,0 +1,13 @@
+{
+    "name": "ivanhoe/ivanhoe-sdk",
+    "description": "PHP sdk for replacing affiliate links",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jeloo",
+            "email": "i.v.yaroslavtsev@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
