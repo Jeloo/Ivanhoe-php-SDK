@@ -9,5 +9,10 @@
         }
     ],
     "minimum-stability": "stable",
-    "require": {}
+    "require": {
+        "nategood/httpful": "^0.2.20"
+    },
+    "autoload": {
+        "psr-0": { "Ivanhoe\\SDK\\": "src/" }
+    }
 }
