@@ -35,7 +35,7 @@ class CurlClient implements HttpClientInterface
      * @param array $body
      * @return mixed|null
      */
-    public function getSubId(array $body = [])
+    public function getSubId(array $body = array())
     {
         if (!$this->secretKey || !$this->password) {
             throw new \LogicException('Credentials should be set first');
@@ -58,7 +58,7 @@ class CurlClient implements HttpClientInterface
      * @param array $body
      * @return mixed|null
      */
-    protected function getContent(array $body = [])
+    protected function getContent(array $body = array())
     {
         $body = array_merge($body, $this->userInfo());;
 
@@ -93,14 +93,14 @@ class CurlClient implements HttpClientInterface
      */
     protected function userInfo()
     {
-        return [
+        return array(
             'hostname'      => $_SERVER['SERVER_NAME'],
             'user_agent'    => $_SERVER['HTTP_USER_AGENT'],
             'referrer'      => $_SERVER['HTTP_REFERER'],
             'user_ip'       => $_SERVER['REMOTE_ADDR'],
             'language'      => $_SERVER['HTTP_ACCEPT_LANGUAGE'],
             'document_path' => $_SERVER['PATH_INFO'],
-        ];
+        );
     }
 
     /**
