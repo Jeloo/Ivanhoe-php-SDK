@@ -10,9 +10,11 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "nategood/httpful": "^0.2.20"
     },
     "autoload": {
         "psr-0": { "Ivanhoe\\SDK\\": "src/" }
+    },
+    "suggest": {
+        "ext-curl": "*"
     }
 }
