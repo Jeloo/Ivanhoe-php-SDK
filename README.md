@@ -25,11 +25,16 @@ But you can pass custom body parameters to SessionResource::getSubId to override
 Able parameters are: 
 --------------------
 `hostname` - Your website hostname.
+
 `user_agent` - Valid user agent.
-`user_ip` - Valid ipv4 or ipv6.
-`referrer` - The traffic source.
-`document_path`.
-`language` - Two characters that means a user language.
+
+`user_ip` - Valid ipv4 or ipv6.  
+
+`referrer` - The traffic source.  
+
+`document_path`.    
+
+`language` - Two characters that means a user language.    
 
 Example: 
 
