@@ -16,9 +16,14 @@ class SessionResource implements SessionResourceInterface
     private $password;
 
     /**
-     * @var array
+     * @var HttpClientInterface
      */
-    private $curlOpts = array();
+    private $httpClient;
+
+    public function __construct(HttpClientInterface $httpClient)
+    {
+        $this->httpClient = $httpClient;
+    }
 
     /**
      * @param array $credentials
@@ -41,56 +46,13 @@ class SessionResource implements SessionResourceInterface
             throw new \LogicException('Credentials should be set first');
         }
 
-        return $this->getContent($body);
-    }
+        $this->httpClient->setOpts(array(
+            CURLOPT_USERPWD => $this->secretKey . ":" . $this->password
+        ));
 
-    /**
-     * @param array $curlOpts
-     * @return $this
-     */
-    public function setOpts(array $curlOpts)
-    {
-        $this->curlOpts = $curlOpts;
-        return $this;
-    }
-
-    /**
-     * @param array $body
-     * @return mixed|null
-     * @throws HttpException
-     */
-    protected function getContent(array $body = array())
-    {
-        $body = array_merge($body, $this->userInfo());
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt($ch, CURLOPT_URL, $this->getUrl());
-        curl_setopt($ch, CURLOPT_USERPWD, $this->secretKey . ":" . $this->password);
-
-        foreach ($this->curlOpts as $opt => $value) {
-            curl_setopt($ch, $opt, $value);
-        }
-
-        $content = curl_exec($ch);
-        $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-        if ($statusCode !== 200) {
-            throw new HttpException(
-                'Got an error response trying to get sub id. Status code: ' . $statusCode
-            );
-        }
-
-        curl_close($ch);
-
-        if ($content === false) {
-            $content = null;
-        }
-
-        return $content;
+        return $this->httpClient->getContent($this->getUrl(), array(
+            'body' => array_merge($body, $this->userInfo())
+        ));
     }
 
     /**
