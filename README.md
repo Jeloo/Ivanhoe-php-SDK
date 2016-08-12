@@ -24,12 +24,12 @@ This method will send user data to Ivanhoe server and return a generated sub id.
 But you can pass custom body parameters to SessionResource::getSubId to override user info. 
 Able parameters are: 
 --------------------
-`hostname` - Your website hostname
-`user_agent` - Valid user agent
-`user_ip` - Valid ipv4 or ipv6
-`referrer` - The traffic source
-`document_path`
-`language` - Two characters that means a user language
+`hostname` - Your website hostname.
+`user_agent` - Valid user agent.
+`user_ip` - Valid ipv4 or ipv6.
+`referrer` - The traffic source.
+`document_path`.
+`language` - Two characters that means a user language.
 
 Example: 
 
@@ -49,3 +49,11 @@ $subId = $sessionResource->setCredentials(['test', 'secret'])
 ### Setting options
 
 You are able to set curl options on CurlClient::setOpts method. The keys are curl option constants.
+
+-----------
+``` php
+$httpClient = new \Ivanhoe\SDK\CurlClient();
+$httpClient->setOpts([
+    CURLOPT_FRESH_CONNECT => true
+]);
+```
