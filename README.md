@@ -1,8 +1,6 @@
 # Ivanhoe-php-SDK
 
 ##Installation
-
-Install from composer 
 -----------
 ``` sh
 $ composer require ivanhoe/ivanhoe-sdk
