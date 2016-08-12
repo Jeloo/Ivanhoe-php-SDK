@@ -2,7 +2,7 @@
 
 namespace Ivanhoe\SDK;
 
-class CurlClient implements HttpClientInterface
+class SessionResource implements SessionResourceInterface
 {
 
     /**
@@ -18,7 +18,7 @@ class CurlClient implements HttpClientInterface
     /**
      * @var array
      */
-    private $curlOpts;
+    private $curlOpts = array();
 
     /**
      * @param array $credentials
@@ -57,10 +57,11 @@ class CurlClient implements HttpClientInterface
     /**
      * @param array $body
      * @return mixed|null
+     * @throws HttpException
      */
     protected function getContent(array $body = array())
     {
-        $body = array_merge($body, $this->userInfo());;
+        $body = array_merge($body, $this->userInfo());
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -68,7 +69,6 @@ class CurlClient implements HttpClientInterface
         curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt($ch, CURLOPT_URL, $this->getUrl());
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/plain'));
         curl_setopt($ch, CURLOPT_USERPWD, $this->secretKey . ":" . $this->password);
 
         foreach ($this->curlOpts as $opt => $value) {
@@ -76,6 +76,14 @@ class CurlClient implements HttpClientInterface
         }
 
         $content = curl_exec($ch);
+        $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        if ($statusCode !== 200) {
+            throw new HttpException(
+                'Got an error response trying to get sub id. Status code: ' . $statusCode
+            );
+        }
+
         curl_close($ch);
 
         if ($content === false) {
@@ -93,6 +101,10 @@ class CurlClient implements HttpClientInterface
      */
     protected function userInfo()
     {
+        if (PHP_SAPI === 'cli') {
+            return array();
+        }
+
         return array(
             'hostname'      => $_SERVER['SERVER_NAME'],
             'user_agent'    => $_SERVER['HTTP_USER_AGENT'],
