@@ -1,5 +1,4 @@
 # Ivanhoe-php-SDK
-Ivanhoe php sdk
 
 ##Installation
 
