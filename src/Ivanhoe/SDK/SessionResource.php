@@ -50,9 +50,11 @@ class SessionResource implements SessionResourceInterface
             CURLOPT_USERPWD => $this->secretKey . ":" . $this->password
         ));
 
-        return $this->httpClient->getContent($this->getUrl(), array(
-            'body' => array_merge($body, $this->userInfo())
+        $this->httpClient->exec($this->getUrl(), array(
+            'body' => array_merge($this->userInfo(), $body)
         ));
+
+        return $this->httpClient->getContent();
     }
 
     /**
@@ -69,11 +71,11 @@ class SessionResource implements SessionResourceInterface
 
         return array(
             'hostname'      => $_SERVER['SERVER_NAME'],
-            'user_agent'    => $_SERVER['HTTP_USER_AGENT'],
-            'referrer'      => $_SERVER['HTTP_REFERER'],
-            'user_ip'       => $_SERVER['REMOTE_ADDR'],
-            'language'      => $_SERVER['HTTP_ACCEPT_LANGUAGE'],
-            'document_path' => $_SERVER['PATH_INFO'],
+            'user_agent'    => array_key_exists('HTTP_USER_AGENT', $_SERVER) ? $_SERVER['HTTP_USER_AGENT'] : '',
+            'referrer'      => array_key_exists('HTTP_REFERER', $_SERVER) ? $_SERVER['HTTP_REFERER'] : '',
+            'user_ip'       => array_key_exists('REMOTE_ADDR', $_SERVER) ? $_SERVER['REMOTE_ADDR'] : '',
+            'language'      => array_key_exists('HTTP_ACCEPT_LANGUAGE', $_SERVER) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '',
+            'document_path' => array_key_exists('PATH_INFO', $_SERVER) ? $_SERVER['PATH_INFO'] : '',
         );
     }
 

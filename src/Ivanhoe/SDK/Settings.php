@@ -11,4 +11,6 @@ class Settings
 
     const API_SESSION_PATH = 'session';
 
+    const GOOGLE_PROFILE_COOKIE = '_ga';
+
 }
