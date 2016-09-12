@@ -11,22 +11,39 @@ class CurlClient implements HttpClientInterface
     private $curlOpts = array();
 
     /**
-     * @param array $curlOpts
+     * @var int
+     */
+    private $statusCode;
+
+    /**
+     * @var string
+     */
+    private $responseBody;
+
+    /**
+     * @param array $opts
      * @return $this
      */
-    public function setOpts(array $curlOpts)
+    public function setOpts(array $opts)
     {
-        $this->curlOpts = $curlOpts;
+        $this->curlOpts = $opts;
         return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatusCode()
+    {
+        return $this->statusCode;
     }
 
     /**
      * @param $url
      * @param array $request
-     * @return mixed|null
-     * @throws HttpException
+     * @return bool
      */
-    public function getContent($url, array $request = array())
+    public function exec($url, array $request = array())
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -39,22 +56,26 @@ class CurlClient implements HttpClientInterface
             curl_setopt($ch, $opt, $value);
         }
 
-        $content = curl_exec($ch);
-        $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $this->responseBody = curl_exec($ch);
+        $this->statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        return $this->isSuccess();
+    }
 
-        if ($statusCode !== 200) {
-            throw new HttpException(
-                'Got an error response trying to get sub id. Status code: ' . $statusCode
-            );
-        }
+    /**
+     * @return string
+     */
+    public function getContent()
+    {
+        return $this->responseBody;
+    }
 
-        curl_close($ch);
-
-        if ($content === false) {
-            $content = null;
-        }
-
-        return $content;
+    /**
+     * Determines if the last request is successful
+     * @return bool
+     */
+    public function isSuccess()
+    {
+        return $this->statusCode == 200;
     }
 
 }
