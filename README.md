@@ -21,7 +21,7 @@ This method will send user data to Ivanhoe server and return a generated sub id.
 But you can pass custom body parameters to SessionResource::getSubId to override user info. 
 Able parameters are: 
 --------------------
-`hostname` - Your website hostname.
+`hostname` - Your website hostname with a protocol.
 
 `user_agent` - Valid user agent.
 
@@ -31,7 +31,9 @@ Able parameters are:
 
 `document_path`.    
 
-`language` - Two characters that means a user language.    
+`language` - Two characters that means a user language.
+
+`google_client_id` - Google analytics client id from [_ga] cookie. Can be get within a helper Analitycs
 
 Example: 
 
@@ -43,8 +45,9 @@ $sessionResource = new Ivanhoe\SDK\SessionResource($httpClient);
 $subId = $sessionResource->setCredentials(['id', 'password'])
     ->getSubId([
         'hostname'   => 'http://test.com',
-        'user_agent' => 'Mozilla/5.0 (Windows Phone 10.0; Android 4.2.1; Microsoft; Lumia 950) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2486.0 Mobile Safari/537.36 Edge/13.10586',
-        'user_ip'    => '127.0.0.1'
+        // google analytics profile id
+        // https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id
+        'google_client_id' => Ivanhoe\SDK\Analytics::getProfileId(),
     ]);
 ```
 
